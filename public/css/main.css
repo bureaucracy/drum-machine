@@ -97,10 +97,13 @@ header a {
 
 #wrapper {
   padding-top: 80px;
+  float: left;
+  padding-bottom: 50px;
 }
 
 #wrapper, footer {
   width: 100%;
+  position: relative;
 }
 
 .inner {
@@ -144,7 +147,7 @@ header a {
 
 #bars {
   width: 600px;
-  margin: 0 auto;
+  float: left;
 }
 
 .bar {
@@ -220,6 +223,10 @@ header a {
   position: absolute;
   left: 190px;
   top: 5px;
+}
+
+footer {
+  clear: both;
 }
 
 #footer label {

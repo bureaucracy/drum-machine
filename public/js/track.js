@@ -59,6 +59,7 @@ Track.prototype = {
   },
 
   loop: function () {
+    this.stop();
     var self = this;
 
     this.isPlaying = true;

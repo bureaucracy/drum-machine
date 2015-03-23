@@ -1,0 +1,6 @@
+{
+    "domain": "localhost",
+    "port": 3000,
+    "analytics": false,
+    "audioPath": "/path/to/your/audio"
+}

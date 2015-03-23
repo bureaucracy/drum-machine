@@ -1,0 +1,29 @@
+{
+  "name": "name-that-synth",
+  "version": "1.0.0",
+  "description": ".",
+  "private": true,
+  "engines": {
+    "iojs": "~1.x.x",
+    "npm": "2.x.x"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "boom": "~2.6.1",
+    "hapi": "~8.2.0",
+    "jade": "~1.9.2",
+    "nconf": "~0.7.1",
+    "walk": "~2.3.9"
+  },
+  "devDependencies": {
+    "nodemon": "~1.3.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bureaucracy/name-that-synth.git"
+  },
+  "author": "the bureaucracy",
+  "license": "BSD"
+}

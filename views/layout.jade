@@ -1,0 +1,36 @@
+doctype html
+html
+  head
+    title name that synth!
+    meta(charset='utf-8')
+    meta(content='width=device-width, height=device-height, user-scalable=no, initial-scale=0.8, maximum-scale=0.8, minimum-scale=0.8', name='viewport')
+    meta(content='yes', name='apple-mobile-web-app-capable')
+    link(rel='stylesheet', href='//brick.a.ssl.fastly.net/Roboto+Condensed:300,400,700')
+    link(rel='stylesheet', href='//brick.a.ssl.fastly.net/Inconsolata:500')
+    link(rel='stylesheet', href='/css/main.css')
+    script(type='text/javascript', src='/js/localforage.js')
+    script(type='text/javascript', src='/js/sample.js')
+    script(type='text/javascript', src='/js/track.js')
+    script(type='text/javascript', src='/js/main.js')
+    if analytics
+      != "<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', '" + analytics + "', 'auto');ga('send', 'pageview');</script>"
+
+  body(class='#{theme}')
+    header
+      .inner
+        a(href='/') drum machine
+
+    #wrapper
+      .inner
+        .content
+          block content
+          #footer
+            button(id='play') ►
+            button(id='pause') ▐▐
+            label(for='bpm') bpm
+            input(type='number', id='bpm', value='120')
+    footer
+      .inner
+
+    #loader
+      p Loading audio, please hold ...

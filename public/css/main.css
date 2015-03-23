@@ -1,0 +1,239 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Main styles */
+
+@font-face {
+  font-family: 'bpdots-bold';
+  src: url('/fonts/BPdotsBold-webfont.woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'bpdots';
+  src: url('/fonts/BPdots-webfont.woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body {
+  height: 100%;
+  position: relative;
+  text-align: center;
+}
+
+input {
+  font-family: Arial;
+}
+
+body {
+  background-color: #111;
+  color: #eee;
+  font-family: 'bpdots';
+}
+
+header {
+  background-color: rgba(3, 3, 3, 0.8);
+  position: fixed;
+  left: 0;
+  right: 0;
+  padding: 5px;
+  z-index: 2;
+  font-size: 2rem;
+  font-family: 'bpdots-bold';
+}
+
+header a {
+  text-decoration: none;
+  color: #94aab6;
+}
+
+#wrapper {
+  padding-top: 80px;
+}
+
+#wrapper, footer {
+  width: 100%;
+}
+
+.inner {
+  padding: 10px;
+}
+
+.hide {
+  display: none;
+}
+
+#loader {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(1, 1, 1, 0.9);
+  color: #eee;
+  text-align: center;
+  font-size: 2rem;
+  line-height: 5rem;
+  padding-top: 20px;
+}
+
+#notes {
+  width: 600px;
+  height: 20px;
+  margin-left: 210px;
+}
+
+.note {
+  width: 14px;
+  background-color: #333;
+  height: 10px;
+  border: 0;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#bars {
+  width: 600px;
+  margin: 0 auto;
+}
+
+.bar {
+  background-color: #888;
+  border: 1px solid #111;
+  margin: 2px;
+  height: 30px;
+  width: 30px;
+  float: left;
+  outline: none;
+}
+
+.bar[on="true"] {
+  background-color: #10fcff;
+}
+
+.playing {
+  background-color: #f00;
+}
+
+.sample {
+  width: 100%;
+  float: left;
+  clear: both;
+  padding: 3px 0;
+  margin-bottom: 3px;
+  border: 2px solid #222;
+}
+
+.sample > span {
+  font-size: 20px;
+  display: inline-block;
+  float: left;
+  width: 200px;
+  text-align: left;
+  padding-left: 10px;
+  line-height: 20px;
+}
+
+#play, #pause {
+  border: 0;
+  background-color: transparent;
+  position: absolute;
+  color :#fff;
+  cursor: pointer;
+  font-size: 40px;
+  padding: 0;
+  width: 55px;
+  height: 75px;
+  left: 2px;
+  text-align: center;
+  line-height: 60px;
+  margin-top: -10px;
+  outline: none;
+}
+
+#pause {
+  left: 60px;
+  font-size: 35px;
+}
+
+#play:hover, #pause:hover {
+  color: #10fcff;
+}
+
+#bpm {
+  border: 0;
+  font-size: 38px;
+  font-weight: 100;
+  background-color: #333;
+  color: #10fcff;
+  width: 90px;
+  position: absolute;
+  left: 190px;
+  top: 5px;
+}
+
+#footer label {
+  position: absolute;
+  left: 140px;
+  font-size: 25px;
+  line-height: 50px;
+}
+
+#footer {
+  background-color: rgba(1, 1, 1, 0.7);
+  position: fixed;
+  bottom: 0;
+  height: 55px;
+  left: 0;
+  right: 0;
+}

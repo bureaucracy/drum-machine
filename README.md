@@ -1,4 +1,4 @@
-# name that synth!
+# drum machine
 
 ## installation
 

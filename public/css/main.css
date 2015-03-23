@@ -84,7 +84,7 @@ header {
   position: fixed;
   left: 0;
   right: 0;
-  padding: 5px;
+  padding: 3px;
   z-index: 2;
   font-size: 2rem;
   font-family: 'bpdots-bold';
@@ -236,4 +236,5 @@ header a {
   height: 55px;
   left: 0;
   right: 0;
+  z-index: 2;
 }

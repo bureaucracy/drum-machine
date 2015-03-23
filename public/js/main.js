@@ -128,8 +128,6 @@
           audioTotal = audioArr.length;
           loadAudio();
         });
-      } else {
-        console.log('error ', http.status)
       }
     };
 

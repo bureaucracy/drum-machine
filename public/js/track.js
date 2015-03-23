@@ -67,8 +67,6 @@ Track.prototype = {
     document.querySelector('#note-0').classList.add('playing');
 
     this.loopAudio = setInterval(function () {
-      var now = (new Date()).getTime();
-
       for (var i = 0; i < Object.keys(self.samples).length; i ++) {
         if (self.sounds[i][counter]) {
           self.samples[i].play();

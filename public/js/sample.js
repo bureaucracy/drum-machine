@@ -2,6 +2,7 @@ var Sample = function () {
   this.sound = false;
   this.name = false;
   this.context = new (window.AudioContext || window.webkitAudioContext);
+  this.bpm = 120;
 };
 
 function toArrBuffer(base64) {

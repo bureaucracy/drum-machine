@@ -1,3 +1,10 @@
+window.requestAnimationFrame = window.requestAnimationFrame ||
+                               window.webkitRequestAnimationFrame ||
+                               window.mozRequestAnimationFrame;
+
+window.cancelAnimationFrame = window.cancelAnimationFrame ||
+                              window.mozCancelAnimationFrame
+
 var Track = function () {
   this.bpm = 120;
   this.isPlaying = false;
@@ -19,6 +26,7 @@ Track.prototype = {
     this.sounds[id] = {};
     this.samples[id] = new Sample();
     this.samples[id].name = 'audio-' + id;
+    this.samples[id].bpm = this._getBPM();
 
     this.samples[id].load(function () {
       for (var i = 0; i < 16; i ++) {
@@ -29,25 +37,6 @@ Track.prototype = {
     });
   },
 
-  play: function () {
-    var self = this;
-    this.isPlaying = true;
-
-    for (var i = 0; i < 16; i ++) {
-      var id = i;
-      var on = self.sounds[0][id];
-      var currSample = self.samples[0];
-
-      setTimeout(function () {
-        console.log(on)
-        if (on) {
-
-          currSample.play();
-        }
-      }, 1000);
-    }
-  },
-
   stop: function () {
     var notes = document.querySelectorAll('.note');
 
@@ -55,35 +44,46 @@ Track.prototype = {
       notes[i].classList.remove('playing');
     }
 
-    clearInterval(this.loopAudio);
+    this.start = 0;
+
+    this.play = null;
   },
 
   loop: function () {
-    this.stop();
-    var self = this;
-
-    this.isPlaying = true;
     var counter = 0;
+    var self = this;
+    var bpm = this._getBPM();
+    this.isPlaying = true;
 
-    document.querySelector('#note-0').classList.add('playing');
+    this.play = function () {
+      try {
+        requestAnimationFrame(self.play);
+      } catch (err) { }
 
-    this.loopAudio = setInterval(function () {
-      for (var i = 0; i < Object.keys(self.samples).length; i ++) {
-        if (self.sounds[i][counter]) {
-          self.samples[i].play();
+      var now = (new Date()).getTime();
+      var delta = now - self.timestamp;
+
+      if (delta >= bpm) {
+        self.timestamp = now - (delta % bpm);
+
+        document.querySelector('#note-' + counter).classList.remove('playing');
+
+        for (var i = 0; i < Object.keys(self.samples).length; i ++) {
+          if (self.sounds[i][counter]) {
+            self.samples[i].play();
+          }
         }
+
+        counter ++;
+
+        if (counter > 15) {
+          counter = 0;
+        }
+
+        document.querySelector('#note-' + counter).classList.add('playing');
       }
+    }
 
-      document.querySelector('#note-' + counter).classList.remove('playing');
-
-      counter ++;
-
-      if (counter > 15) {
-        clearInterval(this.loopAudio);
-        counter = 0;
-      }
-
-      document.querySelector('#note-' + counter).classList.add('playing');
-    }, this._getBPM());
+    this.play();
   }
 };

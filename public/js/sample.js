@@ -41,7 +41,7 @@ Sample.prototype = {
 
       self.filename = audio.name;
       self._toArrBuffer(audio.data);
-      next(self.sound);
+      next(self.filename);
     });
   },
 

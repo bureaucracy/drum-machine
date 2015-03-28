@@ -10,6 +10,7 @@ html
     if env !== 'production'
       script(type='text/javascript', src='/js/sample.js')
       script(type='text/javascript', src='/js/track.js')
+      script(type='text/javascript', src='/js/sequencer.js')
       script(type='text/javascript', src='/js/main.js')
     else
       script(type='text/javascript', src='/js/main.min.js')
@@ -20,16 +21,17 @@ html
     header
       .inner
         a(href='/') drum machine
+        button(id='new-track') +
 
     #wrapper
       .inner
         .content
           block content
           #footer
-            button(id='play') ►
-            button(id='pause') ▐▐
-            label(for='bpm') bpm
-            input(type='number', id='bpm', value='120')
+            button(id='play') play
+            button(id='pause') pause
+            label(for='bpm', class='bpm-change') bpm
+            input(type='text', id='bpm', value='120')
     footer
       .inner
 

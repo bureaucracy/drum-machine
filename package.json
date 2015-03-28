@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "nodemon index.js",
-    "minify": "node_modules/uglify-js/bin/uglifyjs public/js/sample.js public/js/track.js public/js/main.js -o public/js/main.min.js"
+    "minify": "node_modules/uglify-js/bin/uglifyjs public/js/sample.js public/js/track.js public/js/sequencer.js public/js/main.js -o public/js/main.min.js"
   },
   "dependencies": {
     "boom": "~2.6.1",

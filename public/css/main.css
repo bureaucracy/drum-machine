@@ -102,12 +102,13 @@ header a {
 }
 
 #wrapper, footer {
-  width: 100%;
+  width: 1170px;
   position: relative;
 }
 
 .inner {
   padding: 10px;
+  padding-right: 0;
 }
 
 .hide {
@@ -129,35 +130,49 @@ header a {
   padding-top: 20px;
 }
 
-#notes {
-  width: 600px;
+.notes, .bars-row {
+  width: 945px;
+}
+
+.notes {
   height: 20px;
-  margin-left: 210px;
+  margin-left: 216px;
 }
 
-.note {
-  width: 14px;
-  background-color: #333;
-  height: 10px;
-  border: 0;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-#bars {
-  width: 600px;
+.bars-row {
   float: left;
 }
 
-.bar {
+.bar:hover {
+  background-color: #eee;
+}
+
+.bar, .note {
   background-color: #888;
   border: 1px solid #111;
   margin: 2px;
   height: 30px;
-  width: 30px;
+  width: 25px;
   float: left;
   outline: none;
+}
+
+.note span {
+  display: block;
+  font-family: Arial;
+  font-size: 10px;
+  bottom: 15px;
+  position: absolute;
+  margin-left: 50%;
+  left: -4px;
+}
+
+.note {
+  background-color: #333;
+  border: 1px solid transparent;
+  height: 10px;
+  border: 0;
+  position: relative;
 }
 
 .bar[on="true"] {
@@ -181,48 +196,68 @@ header a {
   font-size: 20px;
   display: inline-block;
   float: left;
-  width: 200px;
+  width: 205px;
   text-align: left;
   padding-left: 10px;
   line-height: 20px;
 }
 
+.sequencer {
+  float: left;
+  width: 100%;
+  margin: 10px 0 20px 0;
+}
+
 #play, #pause {
   border: 0;
-  background-color: transparent;
   position: absolute;
-  color :#fff;
+  color :#111;
   cursor: pointer;
-  font-size: 40px;
+  font-size: 20px;
   padding: 0;
-  width: 55px;
-  height: 75px;
   left: 2px;
   text-align: center;
   line-height: 60px;
-  margin-top: -10px;
   outline: none;
+  width: 70px;
 }
 
 #pause {
-  left: 60px;
-  font-size: 35px;
+  left: 75px;
+}
+
+#new-track {
+  font-size: 30px;
+  font-weight: 300;
 }
 
 #play:hover, #pause:hover {
+  background-color: #000;
   color: #10fcff;
 }
 
-#bpm {
+#bpm, #notes-current {
   border: 0;
-  font-size: 38px;
-  font-weight: 100;
+  font-size: 30px;
   background-color: #333;
   color: #10fcff;
-  width: 90px;
+  line-height: 60px;
   position: absolute;
-  left: 190px;
-  top: 5px;
+  outline: none;
+  left: 220px;
+  top: 0;
+  bottom: 0;
+  text-align: center;
+}
+
+#bpm {
+  display: block;
+  width: 70px;
+}
+
+#notes-current {
+  left: 300px;
+  width: 115px;
 }
 
 footer {
@@ -231,9 +266,9 @@ footer {
 
 #footer label {
   position: absolute;
-  left: 140px;
   font-size: 25px;
   line-height: 50px;
+  left: 170px;
 }
 
 #footer {

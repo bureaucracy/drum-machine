@@ -1,98 +1,67 @@
 (function () {
-  var audioTotal = 0;
-  var track = new Track();
+  window.requestAnimationFrame = window.requestAnimationFrame ||
+                               window.webkitRequestAnimationFrame ||
+                               window.mozRequestAnimationFrame;
 
-  function generateButtons(row) {
-    var id = row.getAttribute('sound');
+  window.cancelAnimationFrame = window.cancelAnimationFrame ||
+                                window.mozCancelAnimationFrame;
 
-    // bars
-    var bars = document.createElement('div');
-    bars.id = 'bars';
+  var sequencer = new Sequencer();
+  sequencer.audioTotal = 0;
 
-    for (var i = 0; i < 16; i ++) {
-      var bar = document.createElement('button');
-      pos = i;
-      bar.classList.add('bar');
-      bar.id = 'bar-' + i;
-      bar.setAttribute('pos', i);
-
-      bar.onclick = function () {
-        if (this.getAttribute('on') === 'true') {
-          this.setAttribute('on', false);
-          track.sounds[id][this.getAttribute('pos')] = false;
-        } else {
-          this.setAttribute('on', true);
-          track.sounds[id][this.getAttribute('pos')] = true;
-        }
-      };
-
-      bars.appendChild(bar);
-    }
-
-    row.appendChild(bars);
+  function setNoteChanger() {
+    var id = sequencer.counter;
+    console.log(id)
+    document.querySelector('#note-change-' + id).onchange = function (ev) {
+      sequencer.tracks[ev.target.getAttribute('data-id')].currentNote = this.value;
+      console.log('changing note speed ', ev.target.getAttribute('id'))
+      if (sequencer.isPlaying) {
+        sequencer.play();
+      }
+    };
   }
 
   function loadAudio() {
-
-    var machine = document.querySelector('#machine');
-    var footer = document.querySelector('#footer');
-    var counter = 0;
-
-    for (var i = 0; i < audioTotal; i ++) {
-      track.add(i, function () {
-        var sampleRow = document.createElement('div');
-        sampleRow.classList.add('sample');
-        sampleRow.id = 'sample-' + counter;
-        sampleRow.setAttribute('sound', counter);
-
-        var span = document.createElement('span');
-        span.textContent = track.samples[counter].filename;
-        sampleRow.appendChild(span);
-
-        generateButtons(sampleRow);
-        machine.appendChild(sampleRow);
-        counter ++;
-      });
-    }
+    sequencer.addTrack();
+    setNoteChanger();
 
     // bpm
     document.querySelector('#bpm').onchange = function () {
-      if (isNaN(parseInt(this.value, 10))) {
+      var bpm = parseInt(this.value, 10);
+      if (isNaN(bpm) || bpm > 500) {
         this.value = 120;
       }
 
-      track.bpm = this.value;
+      sequencer.bpm = this.value;
 
-      if (track.isPlaying) {
-        track.stop();
-        track.loop();
+      if (sequencer.isPlaying) {
+        sequencer.play();
       }
+    };
+
+    // notes
+    document.querySelector('.notes-current').onchange = function (ev) {
+      sequencer.tracks[ev.target.getAttribute('data-id')].currentNote = this.value;
+      if (sequencer.isPlaying) {
+        sequencer.play();
+      }
+    };
+
+    // new track
+    document.querySelector('#new-track').onclick = function () {
+      sequencer.addTrack();
+      setNoteChanger();
     };
 
     // play
     document.querySelector('#play').onclick = function () {
-      track.loop();
+      sequencer.play();
     };
 
     // pause
     document.querySelector('#pause').onclick = function () {
-      track.stop();
-    }
-
-    // note markers
-    var notes = document.createElement('div');
-    notes.id = 'notes';
-
-    for (var i = 0; i < 16; i ++) {
-      var note = document.createElement('div');
-      note.id = 'note-' + i;
-      note.classList.add('note');
-      notes.appendChild(note);
-    }
-
-    machine.appendChild(notes);
-    footer.appendChild(play);
-    footer.appendChild(bpm);
+      sequencer.stop();
+    };
 
     document.querySelector('#loader').classList.add('hide');
   }
@@ -125,7 +94,7 @@
             return;
           }
 
-          audioTotal = audioArr.length;
+          sequencer.audioTotal = audioArr.length;
           loadAudio();
         });
       }
@@ -142,7 +111,7 @@
         return;
       }
 
-      audioTotal = total;
+      sequencer.audioTotal = total;
       loadAudio();
     });
   }

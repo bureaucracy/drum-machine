@@ -11,10 +11,10 @@
 
   function setNoteChanger() {
     var id = sequencer.counter;
-    console.log(id)
+
     document.querySelector('#note-change-' + id).onchange = function (ev) {
       sequencer.tracks[ev.target.getAttribute('data-id')].currentNote = this.value;
-      console.log('changing note speed ', ev.target.getAttribute('id'))
+
       if (sequencer.isPlaying) {
         sequencer.play();
       }

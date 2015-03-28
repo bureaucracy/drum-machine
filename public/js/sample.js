@@ -4,18 +4,6 @@ var Sample = function () {
   this.bpm = 120;
 };
 
-function toArrBuffer(base64) {
-  var binaryString = atob(base64);
-  var len = binaryString.length;
-  var bytes = new Uint8Array(len);
-
-  for (var i = 0; i < len; i ++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-
-  return bytes.buffer;
-}
-
 Sample.prototype = {
   _toArrBuffer: function (data) {
     var binaryString = atob(data);

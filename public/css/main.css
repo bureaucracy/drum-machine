@@ -150,12 +150,16 @@ header a {
 .bar, .note {
   background-color: #888;
   border-radius: 2px;
-  border: 0;
+  border: 2px solid transparent;
   margin: 2px;
   height: 30px;
   width: 25px;
   float: left;
   outline: none;
+}
+
+.bar:nth-child(4n - 3) {
+  border: 2px solid #B6B6B6;
 }
 
 .note span {

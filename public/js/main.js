@@ -21,6 +21,10 @@
         sequencer.play();
       }
     };
+
+    document.querySelector('#delete-' + id).onclick = function (ev) {
+      sequencer.remove(ev.target.getAttribute('data-id'));
+    }
   }
 
   function loadAudio() {

@@ -149,7 +149,8 @@ header a {
 
 .bar, .note {
   background-color: #888;
-  border: 1px solid #111;
+  border-radius: 2px;
+  border: 0;
   margin: 2px;
   height: 30px;
   width: 25px;
@@ -193,31 +194,36 @@ header a {
 }
 
 .sample > span {
-  font-size: 20px;
+  font-size: 18px;
   display: inline-block;
   float: left;
   width: 205px;
   text-align: left;
   padding-left: 10px;
-  line-height: 20px;
+  line-height: 30px;
 }
 
 .sequencer {
   float: left;
   width: 100%;
   margin: 10px 0 20px 0;
+  position: relative;
+  padding-bottom: 5px;
+  border-bottom: 2px dashed #333;
 }
 
 #play, #pause {
   border: 0;
+  border-radius: 2px;
   position: absolute;
-  color :#111;
+  color :#333;
   cursor: pointer;
   font-size: 20px;
   padding: 0;
   left: 2px;
   text-align: center;
-  line-height: 60px;
+  line-height: 55px;
+  height: 55px;
   outline: none;
   width: 70px;
 }
@@ -229,14 +235,20 @@ header a {
 #new-track {
   font-size: 30px;
   font-weight: 300;
+  cursor: pointer;
+  border: 0;
+  border-radius: 2px;
+  width: 50px;
+  outline: none;
+  color :#333;
 }
 
-#play:hover, #pause:hover {
-  background-color: #000;
+#play:hover, #pause:hover, #new-track:hover {
+  background-color: #222;
   color: #10fcff;
 }
 
-#bpm, #notes-current {
+#bpm, .notes-current {
   border: 0;
   font-size: 30px;
   background-color: #333;
@@ -250,14 +262,33 @@ header a {
   text-align: center;
 }
 
+.delete {
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  color: #f00;
+  font-size: 30px;
+  position: absolute;
+  left: 0;
+  top: -15px;
+  font-family: Arial;
+}
+
+.delete:hover {
+  color: #fff;
+}
+
 #bpm {
   display: block;
   width: 70px;
 }
 
-#notes-current {
-  left: 300px;
-  width: 115px;
+.notes-current {
+  left: 145px;
+  font-size: 15px;
+  height: 20px;
+  line-height: 20px;
+  top: -2px;
 }
 
 footer {

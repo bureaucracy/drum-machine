@@ -73,6 +73,14 @@ Sequencer.prototype = {
     sequencerRow.classList.add('sequencer');
     sequencerRow.id = 'sequencer-' + this.counter;
 
+    var remove = document.createElement('button');
+    remove.classList.add('delete');
+    remove.setAttribute('data-id', this.counter);
+    remove.id = 'delete-' + this.counter;
+    remove.textContent = 'x';
+
+    sequencerRow.appendChild(remove);
+
     // note markers
     var notes = document.createElement('div');
     notes.classList.add('notes');
@@ -132,5 +140,13 @@ Sequencer.prototype = {
       this.tracks[track].bpm = this.bpm;
       this.tracks[track].loop();
     }
+  },
+
+  remove: function (id) {
+    console.log('removing')
+    this.tracks[id].stop();
+    delete this.tracks[id];
+    var seq = document.querySelector('#sequencer-' + id);
+    seq.parentNode.removeChild(seq);
   }
 };

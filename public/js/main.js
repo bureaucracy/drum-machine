@@ -1,4 +1,6 @@
 (function () {
+  var Context = window.AudioContext || window.webkitAudioContext;
+  window.audioContext = new Context();
   window.requestAnimationFrame = window.requestAnimationFrame ||
                                window.webkitRequestAnimationFrame ||
                                window.mozRequestAnimationFrame;

@@ -1,7 +1,6 @@
 var Sample = function () {
   this.sound = false;
   this.name = false;
-  this.context = new (window.AudioContext || window.webkitAudioContext);
   this.bpm = 120;
 };
 
@@ -46,7 +45,7 @@ Sample.prototype = {
   },
 
   play: function () {
-    var source = this.context.createBufferSource();
+    var source = audioContext.createBufferSource();
     var self = this;
 
     if (!this.name) {
@@ -55,9 +54,9 @@ Sample.prototype = {
     }
 
     this.load(function () {
-      self.context.decodeAudioData(self.sound, function (buffer) {
+      audioContext.decodeAudioData(self.sound, function (buffer) {
         source.buffer = buffer;
-        source.connect(self.context.destination);
+        source.connect(audioContext.destination);
         source.start(0);
       });
     });

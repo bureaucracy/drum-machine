@@ -2,6 +2,26 @@ var Sample = function () {
   this.sound = false;
   this.name = false;
   this.bpm = 120;
+
+  document.querySelector('#wrapper').addEventListener('play', function (event) {
+    switch (event.detail.note) {
+      case 32:
+        event.detail.sample.play();
+        break;
+      case 16:
+        event.detail.sample.play();
+        break;
+      case 8:
+        event.detail.sample.play();
+        break;
+      case 4:
+        event.detail.sample.play();
+        break;
+      case 2:
+        event.detail.sample.play();
+        break;
+    }
+  }, false);
 };
 
 Sample.prototype = {

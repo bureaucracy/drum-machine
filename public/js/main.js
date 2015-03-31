@@ -4,7 +4,6 @@
   window.requestAnimationFrame = window.requestAnimationFrame ||
                                window.webkitRequestAnimationFrame ||
                                window.mozRequestAnimationFrame;
-
   window.cancelAnimationFrame = window.cancelAnimationFrame ||
                                 window.mozCancelAnimationFrame;
 
@@ -15,7 +14,7 @@
     var id = sequencer.counter;
 
     document.querySelector('#note-change-' + id).onchange = function (ev) {
-      sequencer.tracks[ev.target.getAttribute('data-id')].currentNote = this.value;
+      sequencer.tracks[ev.target.getAttribute('data-id')].currentNote = parseInt(this.value, 10);
 
       if (sequencer.isPlaying) {
         sequencer.play();
@@ -47,7 +46,7 @@
 
     // notes
     document.querySelector('.notes-current').onchange = function (ev) {
-      sequencer.tracks[ev.target.getAttribute('data-id')].currentNote = this.value;
+      sequencer.tracks[ev.target.getAttribute('data-id')].currentNote = parseInt(this.value, 10);
       if (sequencer.isPlaying) {
         sequencer.play();
       }

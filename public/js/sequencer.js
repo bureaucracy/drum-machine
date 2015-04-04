@@ -3,61 +3,37 @@ var Sequencer = function () {
   this.tracks = {};
   this.counter = 0;
   this.isPlaying = false;
-  this.timestamp32 = (new Date()).getTime();
-  this.timestamp16 = (new Date()).getTime();
-  this.timestamp8 = (new Date()).getTime();
-  this.timestamp4 = (new Date()).getTime();
-  this.timestamp2 = (new Date()).getTime();
+
+  this._notes = [2, 4, 8, 16, 32];
+
+  function setBPM(nt) {
+    var noteCalc = nt / 4;
+    var qtr = Math.round(((60 / this.bpm) * 1000) * 100000) / 100000;
+
+    if (noteCalc > 0) {
+      noteCalc = qtr / noteCalc;
+    } else {
+      noteCalc = qtr * noteCalc;
+    }
+
+    return Math.round(noteCalc * 100000) / 100000;
+  }
+
+  for (var i = 0; i < this._notes.length; i ++) {
+    this['timestamp' + this._notes[i]] = (new Date()).getTime();
+
+    Sequencer.prototype['_getBPM' + this._notes[i]] = setBPM.bind(this, this._notes[i]);
+  }
 };
 
 Sequencer.prototype = {
-  // thirty second note
-  _getBPM32: function () {
-    var qtr = Math.round(((60 / this.bpm) * 1000) * 100000) / 100000;
-    var note = Math.round((qtr / 8) * 100000) / 100000;
-
-    return Math.round(note * 100000) / 100000;
-  },
-
-  // sixteenth note
-  _getBPM16: function () {
-    var qtr = Math.round(((60 / this.bpm) * 1000) * 100000) / 100000;
-    var note = Math.round((qtr / 4) * 100000) / 100000;
-
-    return Math.round(note * 100000) / 100000;
-  },
-
-  // eighth note
-  _getBPM8: function () {
-    var qtr = Math.round(((60 / this.bpm) * 1000) * 100000) / 100000;
-    var note = Math.round((qtr / 2) * 100000) / 100000;
-
-    return Math.round(note * 100000) / 100000;
-  },
-
-  // quarter note
-  _getBPM4: function () {
-    var qtr = Math.round(((60 / this.bpm) * 1000) * 100000) / 100000;
-    var note = Math.round(qtr * 100000) / 100000;
-
-    return Math.round(note * 100000) / 100000;
-  },
-
-  // half note
-  _getBPM2: function () {
-    var qtr = Math.round(((60 / this.bpm) * 1000) * 100000) / 100000;
-    var note = Math.round((qtr * 2) * 100000) / 100000;
-
-    return Math.round(note * 100000) / 100000;
-  },
-
   _generateNoteSelector: function () {
     var select = document.createElement('select');
     select.classList.add('notes-current');
     select.id = 'note-change-' + this.counter;
     select.setAttribute('data-id', this.counter);
 
-    var notes = [32, 16, 8, 4, 2];
+    var notes = this._notes.reverse();
     var option;
 
     for (var i = 0; i < notes.length; i ++) {
@@ -75,12 +51,19 @@ Sequencer.prototype = {
 
   addTrack: function () {
     var track = new Track();
-
     this.counter ++;
 
     track.id = this.counter;
 
-    var self = this;
+    function setClick(id) {
+      if (this.getAttribute('on') === 'true') {
+        this.setAttribute('on', false);
+        track.sounds[id][this.getAttribute('pos')] = false;
+      } else {
+        this.setAttribute('on', true);
+        track.sounds[id][this.getAttribute('pos')] = true;
+      }
+    }
 
     function generateButtons(row) {
       var id = row.getAttribute('sound');
@@ -95,16 +78,7 @@ Sequencer.prototype = {
         bar.classList.add('bar');
         bar.id = 'bar-' + i;
         bar.setAttribute('pos', i);
-
-        bar.onclick = function () {
-          if (this.getAttribute('on') === 'true') {
-            this.setAttribute('on', false);
-            track.sounds[id][this.getAttribute('pos')] = false;
-          } else {
-            this.setAttribute('on', true);
-            track.sounds[id][this.getAttribute('pos')] = true;
-          }
-        };
+        bar.onclick = setClick.bind(bar, id);
 
         bars.appendChild(bar);
       }
@@ -148,8 +122,9 @@ Sequencer.prototype = {
 
     var counter = 0;
 
-    for (var i = 0; i < this.audioTotal; i ++) {
-      track.add(i, function (filename) {
+    function addSample(j) {
+      var self = this;
+      track.add(j, function (filename) {
         var sampleRow = document.createElement('div');
         sampleRow.classList.add('sample');
         sampleRow.id = 'sample-' + counter;
@@ -159,10 +134,14 @@ Sequencer.prototype = {
         span.textContent = filename;
         sampleRow.appendChild(span);
 
-        generateButtons(sampleRow);
+        generateButtons.call(self, sampleRow);
         sequencerRow.appendChild(sampleRow);
         counter ++;
       });
+    }
+
+    for (var j = 0; j < this.audioTotal; j ++) {
+      addSample.call(this, j);
     }
 
     this.tracks[this.counter] = track;
@@ -188,60 +167,31 @@ Sequencer.prototype = {
 
   play: function () {
     this.stop();
-    var self = this;
     this.isPlaying = true;
+
+    function setTimer(notes) {
+      var now = (new Date()).getTime();
+      var delta = {};
+
+      for (var i = 0; i < this._notes.length; i ++) {
+        var note = this._notes[i];
+        delta[note] = now - this['timestamp' + note];
+
+        if (delta[note] >= this['_getBPM' + note]()) {
+          this['timestamp' + note] = now - (delta[note] % this['_getBPM' + note]());
+          this._emit('track', {
+            note: note
+          });
+        }
+      }
+    }
 
     this.playTrack = function () {
       try {
-        requestAnimationFrame(self.playTrack);
+        requestAnimationFrame(this.playTrack.bind(this));
       } catch (err) { }
 
-      var now = (new Date()).getTime();
-      var delta32 = now - self.timestamp32;
-      var delta16 = now - self.timestamp16;
-      var delta8 = now - self.timestamp8;
-      var delta4 = now - self.timestamp4;
-      var delta2 = now - self.timestamp2;
-
-      // 1/32
-      if (delta32 >= self._getBPM32()) {
-        self.timestamp32 = now - (delta32 % self._getBPM32());
-        self._emit('track', {
-          note: 32
-        });
-      }
-
-      // 1/16
-      if (delta16 >= self._getBPM16()) {
-        self.timestamp16 = now - (delta16 % self._getBPM16());
-        self._emit('track', {
-          note: 16
-        });
-      }
-
-      // 1/8
-      if (delta8 >= self._getBPM8()) {
-        self.timestamp8 = now - (delta8 % self._getBPM8());
-        self._emit('track', {
-          note: 8
-        });
-      }
-
-      // 1/4
-      if (delta4 >= self._getBPM4()) {
-        self.timestamp4 = now - (delta4 % self._getBPM4());
-        self._emit('track', {
-          note: 4
-        });
-      }
-
-      // 1/2
-      if (delta2 >= self._getBPM2()) {
-        self.timestamp2 = now - (delta2 % self._getBPM2());
-        self._emit('track', {
-          note: 2
-        });
-      }
+      setTimer.call(this);
     };
 
     this.playTrack();

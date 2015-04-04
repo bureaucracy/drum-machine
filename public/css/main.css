@@ -247,6 +247,11 @@ header a {
   color :#333;
 }
 
+#new-track[disabled], #new-track[disabled]:hover {
+  background-color: #333;
+  color: #555;
+}
+
 #play:hover, #pause:hover, #new-track:hover {
   background-color: #222;
   color: #10fcff;

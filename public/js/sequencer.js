@@ -3,6 +3,8 @@ var Sequencer = function () {
   this.tracks = {};
   this.counter = 0;
   this.isPlaying = false;
+  this.trackTotal = 0;
+  this.trackMax = 5; // maximum five simultaneous loaded
 
   this._notes = [2, 4, 8, 16, 32];
 
@@ -50,6 +52,15 @@ Sequencer.prototype = {
   },
 
   addTrack: function () {
+    this.trackTotal ++;
+
+    if (this.trackTotal > this.trackMax) {
+      document.querySelector('#new-track').setAttribute('disabled', true);
+      return;
+    } else {
+      document.querySelector('#new-track').removeAttribute('disabled');
+    }
+
     var track = new Track();
     this.counter ++;
 
@@ -198,6 +209,16 @@ Sequencer.prototype = {
   },
 
   remove: function (id) {
+    this.trackTotal --;
+
+    if (this.trackTotal > 0) {
+      this.trackTotal = 0;
+    }
+
+    if (this.trackTotal <= this.trackMax) {
+      document.querySelector('#new-track').removeAttribute('disabled');
+    }
+
     this.tracks[id].stop();
     delete this.tracks[id];
     var seq = document.querySelector('#sequencer-' + id);

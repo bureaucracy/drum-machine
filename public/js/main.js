@@ -4,8 +4,6 @@
   window.requestAnimationFrame = window.requestAnimationFrame ||
                                window.webkitRequestAnimationFrame ||
                                window.mozRequestAnimationFrame;
-  window.cancelAnimationFrame = window.cancelAnimationFrame ||
-                                window.mozCancelAnimationFrame;
 
   var sequencer = new Sequencer();
   sequencer.audioTotal = 0;
@@ -23,7 +21,7 @@
 
     document.querySelector('#delete-' + id).onclick = function (ev) {
       sequencer.remove(ev.target.getAttribute('data-id'));
-    }
+    };
   }
 
   function loadAudio() {
@@ -68,6 +66,18 @@
       sequencer.stop();
     };
 
+    // reset
+    document.querySelector('#reset').onclick = function () {
+      localforage.clear(function (err) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+
+        document.location.href = '/';
+      });
+    };
+
     document.querySelector('#loader').classList.add('hide');
   }
 
@@ -85,10 +95,6 @@
             localforage.setItem('audio-' + i, {
               data: audioArr[id].data,
               name: audioArr[id].name
-            }, function (err) {
-              if (err) {
-                console.log('error: ', err);
-              }
             });
           }
         }
@@ -107,7 +113,7 @@
 
     http.open('GET', '/audio', true);
     http.send();
-  };
+  }
 
   function init() {
     localforage.getItem('downloaded', function (err, total) {

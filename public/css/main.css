@@ -95,6 +95,17 @@ header a {
   color: #94aab6;
 }
 
+#actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#actions a {
+  font-size: 15px;
+  padding: 0 10px;
+}
+
 #wrapper {
   padding-top: 80px;
   float: left;
@@ -115,6 +126,23 @@ header a {
   display: none;
 }
 
+.toggle-edits {
+  position: absolute;
+  left: 180px;
+  top: 5px;
+  border: 0;
+  border-radius: 2px;
+  color :#333;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 20px;
+  padding: 0;
+  text-align: center;
+  height: 30px;
+  outline: none;
+  width: 30px;
+}
+
 #loader {
   position: fixed;
   z-index: 2;
@@ -128,6 +156,44 @@ header a {
   font-size: 2rem;
   line-height: 5rem;
   padding-top: 20px;
+}
+
+.edits {
+  background-color: #333;
+  float: left;
+  width: 985px;
+  text-align: left;
+  padding: 5px 0;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #aaa;
+  padding-left: 180px;
+}
+
+.edits span {
+  padding: 0 10px;
+  font-size: 18px;
+  display: inline-block;
+  width: 40px;
+}
+
+.edits button {
+  background-color: #555;
+  border: 2px solid #ccc;
+  color: #ccc;
+  text-transform: uppercase;
+  margin: 0 2px;
+  font-weight: bold;
+}
+
+.edits button[disabled] {
+  background-color: transparent;
+  border: 2px solid #777;
+  color: #777;
+}
+
+.volume.down {
+  margin-right: 20px;
 }
 
 .notes, .bars-row {
@@ -148,7 +214,7 @@ header a {
 }
 
 .bar, .note {
-  background-color: #888;
+  background-color: #777;
   border-radius: 2px;
   border: 2px solid transparent;
   margin: 2px;
@@ -159,7 +225,7 @@ header a {
 }
 
 .bar:nth-child(4n - 3) {
-  border: 2px solid #B6B6B6;
+  border: 2px solid #b6b6b6;
 }
 
 .note span {
@@ -195,6 +261,7 @@ header a {
   padding: 3px 0;
   margin-bottom: 3px;
   border: 2px solid #222;
+  position: relative;
 }
 
 .sample > span {
@@ -252,7 +319,7 @@ header a {
   color: #555;
 }
 
-#play:hover, #pause:hover, #new-track:hover {
+#play:hover, #pause:hover, #new-track:hover, .toggle-edits:hover {
   background-color: #222;
   color: #10fcff;
 }

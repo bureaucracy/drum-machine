@@ -8,6 +8,7 @@ html
     link(rel='stylesheet', href='/css/main.css')
     script(type='text/javascript', src='/js/localforage.js')
     if env !== 'production'
+      script(type='text/javascript', src='/js/effects.js')
       script(type='text/javascript', src='/js/sample.js')
       script(type='text/javascript', src='/js/track.js')
       script(type='text/javascript', src='/js/sequencer.js')
@@ -22,6 +23,8 @@ html
       .inner
         a(href='/') drum machine
         button(id='new-track') +
+      #actions
+        a(href='javascript:;', id='reset') Refresh files
 
     #wrapper
       .inner

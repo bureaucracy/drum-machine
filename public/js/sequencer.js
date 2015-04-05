@@ -35,7 +35,7 @@ Sequencer.prototype = {
     select.id = 'note-change-' + this.counter;
     select.setAttribute('data-id', this.counter);
 
-    var notes = this._notes.reverse();
+    var notes = this._notes;
     var option;
 
     for (var i = 0; i < notes.length; i ++) {
@@ -53,6 +53,10 @@ Sequencer.prototype = {
 
   addTrack: function () {
     this.trackTotal ++;
+
+    if (this.trackTotal > this.trackMax) {
+      this.trackTotal = this.trackMax;
+    }
 
     if (this.trackTotal > this.trackMax) {
       document.querySelector('#new-track').setAttribute('disabled', true);
@@ -134,21 +138,111 @@ Sequencer.prototype = {
     var counter = 0;
 
     function addSample(j) {
-      var self = this;
       track.add(j, function (filename) {
         var sampleRow = document.createElement('div');
         sampleRow.classList.add('sample');
-        sampleRow.id = 'sample-' + counter;
+        sampleRow.id = 'sample-' + this.counter + '-' + counter;
         sampleRow.setAttribute('sound', counter);
 
         var span = document.createElement('span');
         span.textContent = filename;
         sampleRow.appendChild(span);
 
-        generateButtons.call(self, sampleRow);
+        var button = document.createElement('button');
+        button.classList.add('toggle-edits');
+        button.setAttribute('data-edits', 'edits-' + this.counter + '-' + counter);
+        button.textContent = '+';
+        button.onclick = function () {
+          var id = this.parentNode.getAttribute('sound');
+          track.toggleEditRow(id, this);
+        };
+
+        sampleRow.appendChild(button);
+
+        generateButtons.call(this, sampleRow);
         sequencerRow.appendChild(sampleRow);
+
+        // volume, delay, etc
+        var editsRow = document.createElement('div');
+        editsRow.classList.add('edits');
+        editsRow.id = 'edits-' + this.counter + '-' + counter;
+        editsRow.setAttribute('sound', counter);
+        editsRow.classList.add('hide');
+
+        var span = document.createElement('span');
+        span.id = 'volume-' + this.counter + '-' + counter;
+        span.textContent = 1;
+
+        editsRow.appendChild(span);
+
+        button = document.createElement('button');
+        button.classList.add('volume');
+        button.classList.add('up');
+        button.textContent = 'vol +';
+        button.id = 'volume-up-' + this.counter + '-' + counter;
+        button.setAttribute('data-track', span.id);
+        button.setAttribute('disabled', true);
+        button.onclick = function () {
+          var id = this.parentNode.getAttribute('sound');
+          var vol = track.setVolumeUp(id, 'up');
+          document.querySelector('#' + this.getAttribute('data-track')).textContent = vol;
+        };
+
+        editsRow.appendChild(button);
+
+        button = document.createElement('button');
+        button.classList.add('volume');
+        button.classList.add('down');
+        button.textContent = 'vol -';
+        button.id = 'volume-down-' + this.counter + '-' + counter;
+        button.setAttribute('data-track', span.id);
+        button.onclick = function () {
+          var id = this.parentNode.getAttribute('sound');
+          var vol = track.setVolumeDown(id, 'down');
+          document.querySelector('#' + this.getAttribute('data-track')).textContent = vol;
+        };
+
+        editsRow.appendChild(button);
+
+        span = document.createElement('span');
+        span.id = 'delay-' + this.counter + '-' + counter;
+        span.textContent = 0;
+
+        editsRow.appendChild(span);
+
+        button = document.createElement('button');
+        button.classList.add('distortion');
+        button.classList.add('up');
+        button.textContent = 'distort +';
+        button.id = 'distortion-up-' + this.counter + '-' + counter;
+        button.setAttribute('data-track', span.id);
+        button.onclick = function () {
+          var id = this.parentNode.getAttribute('sound');
+          var delay = track.setDistortionUp(id, 'up');
+          document.querySelector('#' + this.getAttribute('data-track')).textContent = delay;
+        };
+
+        editsRow.appendChild(button);
+
+        button = document.createElement('button');
+        button.classList.add('distortion');
+        button.classList.add('down');
+        button.textContent = 'distort -';
+        button.id = 'distortion-down-' + this.counter + '-' + counter;
+        button.setAttribute('data-track', span.id);
+        button.setAttribute('disabled', true);
+        button.onclick = function () {
+          var id = this.parentNode.getAttribute('sound');
+          var delay = track.setDistortionDown(id, 'down');
+          document.querySelector('#' + this.getAttribute('data-track')).textContent = delay;
+        };
+
+        editsRow.appendChild(button);
+
+        sequencerRow.appendChild(editsRow);
+
         counter ++;
-      });
+      }.bind(this));
     }
 
     for (var j = 0; j < this.audioTotal; j ++) {

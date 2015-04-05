@@ -20,18 +20,91 @@ Track.prototype = {
   },
 
   add: function (id, next) {
-    var self = this;
     this.sounds[id] = {};
     this.samples[id] = new Sample();
     this.samples[id].name = 'audio-' + id;
 
     this.samples[id].load(function (filename) {
       for (var i = 0; i < 16; i ++) {
-        self.sounds[id][i] = false;
+        this.sounds[id][i] = false;
       }
 
       next(filename);
-    });
+    }.bind(this));
+  },
+
+  setVolumeUp: function (id) {
+    this.samples[id].volume = Math.round((this.samples[id].volume + 0.10) * 10) / 10;
+
+    document.querySelector('#volume-down-' + this.id + '-' + id).removeAttribute('disabled');
+
+    if (this.samples[id].volume >= 1) {
+      document.querySelector('#volume-up-' + this.id + '-' + id).setAttribute('disabled', true);
+      this.samples[id].volume = 1;
+    } else {
+      document.querySelector('#volume-up-' + this.id + '-' + id).removeAttribute('disabled');
+    }
+
+    return this.samples[id].volume;
+  },
+
+  setVolumeDown: function (id) {
+    this.samples[id].volume = Math.round((this.samples[id].volume - 0.10) * 10) / 10;
+
+    document.querySelector('#volume-up-' + this.id + '-' + id).removeAttribute('disabled');
+
+    if (this.samples[id].volume <= 0) {
+      document.querySelector('#volume-down-' + this.id + '-' + id).setAttribute('disabled', true);
+      this.samples[id].volume = 0;
+    } else {
+      document.querySelector('#volume-down-' + this.id + '-' + id).removeAttribute('disabled');
+    }
+
+    return this.samples[id].volume;
+  },
+
+  setDistortionUp: function (id) {
+    this.samples[id].distortion = this.samples[id].distortion + 100;
+
+    document.querySelector('#distortion-down-' + this.id + '-' + id).removeAttribute('disabled');
+
+    if (this.samples[id].distortion >= 1000) {
+      document.querySelector('#distortion-up-' + this.id + '-' + id).setAttribute('disabled', true);
+      this.samples[id].distortion = 1000;
+    } else {
+      document.querySelector('#distortion-up-' + this.id + '-' + id).removeAttribute('disabled');
+    }
+
+    return this.samples[id].distortion;
+  },
+
+  setDistortionDown: function (id) {
+    this.samples[id].distortion = this.samples[id].distortion - 100;
+
+    document.querySelector('#distortion-up-' + this.id + '-' + id).removeAttribute('disabled');
+
+    if (this.samples[id].distortion <= 0) {
+      document.querySelector('#distortion-down-' + this.id + '-' + id).setAttribute('disabled', true);
+      this.samples[id].distortion = 0;
+    } else {
+      document.querySelector('#distortion-down-' + this.id + '-' + id).removeAttribute('disabled');
+    }
+
+    return this.samples[id].distortion;
+  },
+
+  toggleEditRow: function (id, button) {
+    var edit = document.querySelector('#edits-' + this.id + '-' + id);
+
+    if (this.samples[id].showEditRow) {
+      edit.classList.add('hide');
+      button.textContent = '+';
+      this.samples[id].showEditRow = false;
+    } else {
+      edit.classList.remove('hide');
+      button.textContent = '-';
+      this.samples[id].showEditRow = true;
+    }
   },
 
   stop: function () {

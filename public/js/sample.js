@@ -40,7 +40,11 @@ Sample.prototype = {
   },
 
   load: function (next) {
-    var self = this;
+ //   if (this.sound) {
+      // In Firefox, the arraybuffer seems to lose its content type after the first play.
+      // If the sound doesn't exist anymore, we try loading it again.
+ //     next(this.filename);
+ //   }
 
     localforage.getItem(this.name, function (err, audio) {
       if (err) {
@@ -48,35 +52,37 @@ Sample.prototype = {
         return;
       }
 
-      self.filename = audio.name;
-      self._toArrBuffer(audio.data);
-      next(self.filename);
-    });
+      this.filename = audio.name;
+      this._toArrBuffer(audio.data);
+      next(this.filename);
+    }.bind(this));
   },
 
   play: function () {
     var source = audioContext.createBufferSource();
     var gainNode = audioContext.createGain();
-    var delayNode = audioContext.createDelay();
     var distortionNode = audioContext.createWaveShaper();
-    var self = this;
+    var convolverNode = audioContext.createConvolver();
 
     if (!this.name) {
       console.log('no sound name/sample provided');
       return;
     }
 
-    this.load(function () {
-      audioContext.decodeAudioData(this.sound, function (buffer) {
-        source.buffer = buffer;
-        source.connect(gainNode);
-        gainNode.connect(distortionNode);
-        distortionNode.connect(audioContext.destination);
-        gainNode.gain.value = this._volume;
-        distortionNode.curve = Effect.distortionCurve(this._distortion);
-        distortionNode.oversample = '2x';
-        source.start(0);
+    if (!source.buffer) {
+      this.load(function () {
+        audioContext.decodeAudioData(this.sound, function (buffer) {
+          source.buffer = buffer;
+          source.connect(gainNode);
+          gainNode.connect(distortionNode);
+          distortionNode.connect(audioContext.destination);
+          gainNode.gain.value = this._volume;
+          distortionNode.curve = Effect.distortionCurve(this._distortion);
+          distortionNode.oversample = '2x';
+        }.bind(this));
       }.bind(this));
-    }.bind(this));
+    }
+
+    source.start(0);
   }
 };

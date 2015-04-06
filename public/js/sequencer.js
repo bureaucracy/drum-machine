@@ -317,5 +317,24 @@ Sequencer.prototype = {
     delete this.tracks[id];
     var seq = document.querySelector('#sequencer-' + id);
     seq.parentNode.removeChild(seq);
+  },
+
+  serialize: function () {
+    var output = '';
+    for (var track in this.tracks) {
+      output += this.tracks[track].serialize() + ';';
+    }
+    return output.slice(0, -1);
+  },
+
+  deserialize: function (input) {
+    console.log('deserializing...');
+    this.tracks = {};
+    input.split(';').forEach(function(part, i) {
+      this.addTrack();
+      console.log(this.tracks)
+      this.tracks[i + 1].deserialize(part);
+      console.log(this.tracks)
+    }.bind(this));
   }
 };

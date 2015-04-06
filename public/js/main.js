@@ -25,7 +25,12 @@
   }
 
   function loadAudio() {
-    sequencer.addTrack();
+    if (document.location.hash) {
+      sequencer.deserialize(document.location.hash.slice(1));
+      console.log(sequencer);
+    } else {
+      sequencer.addTrack();
+    }
     setNoteChanger();
 
     // bpm
@@ -80,6 +85,11 @@
 
         document.location.href = '/';
       });
+    };
+
+    // serialize
+    document.querySelector('#serialize').onclick = function () {
+      console.log(sequencer.serialize());
     };
 
     document.querySelector('#loader').classList.add('hide');

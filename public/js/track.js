@@ -36,7 +36,7 @@ Track.prototype = {
     this.samples[id].name = 'audio-' + id;
 
     this.samples[id].load(function (filename) {
-      for (var i = 0; i < 16; i ++) {
+      for (var i = 0; i < 32; i ++) {
         this.sounds[id][i] = false;
       }
 
@@ -149,5 +149,43 @@ Track.prototype = {
     }
 
     document.querySelector('#note-' + this.id + '-' + this.counter).classList.add('playing');
+  },
+
+  serialize: function () {
+    var output = '';
+    output += this.currentNote + ':';
+    for (var i in this.sounds) {
+      output += this.samples[i]._volume + ',';
+      output += this.samples[i]._distortion + ',';
+      var n = 0;
+      for (var j in this.sounds[i]) {
+        if (this.sounds[i][j]) {
+          n ++;
+        }
+        if (j < 31) {
+          n = n << 1;
+        }
+      }
+      output += n.toString(36) + ':';
+    }
+    return output.slice(0, -1);
+  },
+
+  deserialize: function (input) {
+    var rows = input.split(':');
+    this.currentNote = parseInt(rows[0], 10);
+    rows = rows.slice(1);
+    rows.forEach(function(row, i) {
+      var parts = row.split(',');
+      var volume = parseFloat(parts[0], 10);
+      var distortion = parseInt(parts[1], 10);
+      var encodedSounds = parseInt(parts[2], 36);
+      this.samples[i]._volume = volume;
+      this.samples[i]._distortion = distortion;
+      for (var j = 0; j < 32; j++) {
+        this.sounds[i][31 - j] = !!(encodedSounds & 1);
+        encodedSounds = encodedSounds >> 1;
+      }
+    }.bind(this));
   }
 };

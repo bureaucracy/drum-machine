@@ -31,8 +31,12 @@
     // bpm
     document.querySelector('#bpm').onchange = function () {
       var bpm = parseInt(this.value, 10);
-      if (isNaN(bpm) || bpm > 500) {
+      if (isNaN(bpm) || bpm < 10) {
         this.value = 120;
+      }
+
+      if (bpm > 300) {
+        this.value = 300;
       }
 
       sequencer.bpm = this.value;

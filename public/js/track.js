@@ -6,14 +6,25 @@ var Track = function () {
   this.counter = 0;
   this.id = false;
 
-  document.querySelector('#wrapper').addEventListener('track', function (event) {
+  var wrapper = document.querySelector('#wrapper');
+
+  wrapper.addEventListener('track', playTrack.bind(this));
+  wrapper.removeEventListener('track', playTrack.bind(this));
+
+  function playTrack(event) {
     if (this.currentNote === event.detail.note) {
       this.play();
     }
-  }.bind(this), false);
+  }
 };
 
 Track.prototype = {
+  _playTrack: function (event) {
+    if (this.currentNote === event.detail.note) {
+      this.play();
+    }
+  },
+
   _emit: function (what, detail) {
     var event = new CustomEvent(what, { detail: detail });
     document.querySelector('#wrapper').dispatchEvent(event);

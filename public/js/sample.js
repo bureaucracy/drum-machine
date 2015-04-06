@@ -5,12 +5,16 @@ var Sample = function () {
   this._delay = 0;
   this._distortion = 0;
 
-  document.querySelector('#wrapper').addEventListener('play', function (event) {
-    event.detail.sample.play();
-  }, false);
+  document.querySelector('#wrapper').addEventListener('play', this._playAudio);
 };
 
 Sample.prototype = {
+  _playAudio: function (event) {
+    event.detail.sample.play(function () {
+      document.querySelector('#wrapper').removeEventListener('play', this._playAudio);
+    });
+  },
+
   _toArrBuffer: function (data) {
     var binaryString = atob(data);
     var len = binaryString.length;
@@ -40,12 +44,6 @@ Sample.prototype = {
   },
 
   load: function (next) {
- //   if (this.sound) {
-      // In Firefox, the arraybuffer seems to lose its content type after the first play.
-      // If the sound doesn't exist anymore, we try loading it again.
- //     next(this.filename);
- //   }
-
     localforage.getItem(this.name, function (err, audio) {
       if (err) {
         console.log('error: ', err);
@@ -53,36 +51,38 @@ Sample.prototype = {
       }
 
       this.filename = audio.name;
-      this._toArrBuffer(audio.data);
+      this.base64 = audio.data;
       next(this.filename);
     }.bind(this));
   },
 
-  play: function () {
+  play: function (next) {
+    document.querySelector('#wrapper').addEventListener('play', this._playAudio);
     var source = audioContext.createBufferSource();
     var gainNode = audioContext.createGain();
     var distortionNode = audioContext.createWaveShaper();
-    var convolverNode = audioContext.createConvolver();
 
     if (!this.name) {
       console.log('no sound name/sample provided');
       return;
     }
 
-    if (!source.buffer) {
-      this.load(function () {
-        audioContext.decodeAudioData(this.sound, function (buffer) {
-          source.buffer = buffer;
-          source.connect(gainNode);
-          gainNode.connect(distortionNode);
-          distortionNode.connect(audioContext.destination);
-          gainNode.gain.value = this._volume;
-          distortionNode.curve = Effect.distortionCurve(this._distortion);
-          distortionNode.oversample = '2x';
-        }.bind(this));
-      }.bind(this));
-    }
+    this._toArrBuffer(this.base64);
 
-    source.start(0);
+    audioContext.decodeAudioData(this.sound, function (buffer) {
+      if (!this.buffer) {
+        this.buffer = buffer;
+      }
+
+      source.buffer = this.buffer;
+      source.connect(gainNode);
+      gainNode.connect(distortionNode);
+      distortionNode.connect(audioContext.destination);
+      gainNode.gain.value = this._volume;
+      distortionNode.curve = Effect.distortionCurve(this._distortion);
+      distortionNode.oversample = '2x';
+      source.start(0);
+      next(true);
+    }.bind(this));
   }
 };

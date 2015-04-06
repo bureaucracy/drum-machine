@@ -51,7 +51,7 @@ Sequencer.prototype = {
     return select;
   },
 
-  addTrack: function () {
+  addTrack: function (next) {
     this.trackTotal ++;
 
     if (this.trackTotal > this.trackMax) {
@@ -91,7 +91,7 @@ Sequencer.prototype = {
         var bar = document.createElement('button');
         pos = i;
         bar.classList.add('bar');
-        bar.id = 'bar-' + i;
+        bar.id = 'bar-' + this.counter + '-' + i;
         bar.setAttribute('pos', i);
         bar.onclick = setClick.bind(bar, id);
 
@@ -137,7 +137,7 @@ Sequencer.prototype = {
 
     var counter = 0;
 
-    function addSample(j) {
+    function addSample(j, next) {
       track.add(j, function (filename) {
         var sampleRow = document.createElement('div');
         sampleRow.classList.add('sample');
@@ -242,11 +242,15 @@ Sequencer.prototype = {
         sequencerRow.appendChild(editsRow);
 
         counter ++;
+
+        if (counter === this.audioTotal) {
+          next(true);
+        }
       }.bind(this));
     }
 
     for (var j = 0; j < this.audioTotal; j ++) {
-      addSample.call(this, j);
+      addSample.call(this, j, next);
     }
 
     this.tracks[this.counter] = track;
@@ -328,13 +332,12 @@ Sequencer.prototype = {
   },
 
   deserialize: function (input) {
-    console.log('deserializing...');
     this.tracks = {};
+    document.querySelector('#loader').classList.add('hide');
     input.split(';').forEach(function(part, i) {
-      this.addTrack();
-      console.log(this.tracks)
-      this.tracks[i + 1].deserialize(part);
-      console.log(this.tracks)
+      this.addTrack(function () {
+        this.tracks[i + 1].deserialize(part, i + 1);
+      }.bind(this));
     }.bind(this));
   }
 };

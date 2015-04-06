@@ -36,9 +36,6 @@ Track.prototype = {
     this.samples[id].name = 'audio-' + id;
 
     this.samples[id].load(function (filename) {
-      for (var i = 0; i < 32; i ++) {
-        this.sounds[id][i] = false;
-      }
 
       next(filename);
     }.bind(this));
@@ -171,7 +168,7 @@ Track.prototype = {
     return output.slice(0, -1);
   },
 
-  deserialize: function (input) {
+  deserialize: function (input, idx) {
     var rows = input.split(':');
     this.currentNote = parseInt(rows[0], 10);
     rows = rows.slice(1);
@@ -180,10 +177,15 @@ Track.prototype = {
       var volume = parseFloat(parts[0], 10);
       var distortion = parseInt(parts[1], 10);
       var encodedSounds = parseInt(parts[2], 36);
+
       this.samples[i]._volume = volume;
       this.samples[i]._distortion = distortion;
       for (var j = 0; j < 32; j++) {
         this.sounds[i][31 - j] = !!(encodedSounds & 1);
+
+        if (this.sounds[i][31 - j]) {
+          document.querySelector('#bar-' + idx + '-' + (31 - j)).setAttribute('on', true);
+        }
         encodedSounds = encodedSounds >> 1;
       }
     }.bind(this));

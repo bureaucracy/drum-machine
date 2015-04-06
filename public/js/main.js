@@ -89,6 +89,7 @@
 
     // serialize
     document.querySelector('#serialize').onclick = function () {
+      document.location.hash = sequencer.serialize();
       console.log(sequencer.serialize());
     };
 

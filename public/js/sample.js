@@ -62,18 +62,7 @@ Sample.prototype = {
     var gainNode = audioContext.createGain();
     var distortionNode = audioContext.createWaveShaper();
 
-    if (!this.name) {
-      console.log('no sound name/sample provided');
-      return;
-    }
-
-    this._toArrBuffer(this.base64);
-
-    audioContext.decodeAudioData(this.sound, function (buffer) {
-      if (!this.buffer) {
-        this.buffer = buffer;
-      }
-
+    function runSample() {
       source.buffer = this.buffer;
       source.connect(gainNode);
       gainNode.connect(distortionNode);
@@ -82,7 +71,22 @@ Sample.prototype = {
       distortionNode.curve = Effect.distortionCurve(this._distortion);
       distortionNode.oversample = '2x';
       source.start(0);
-      next(true);
-    }.bind(this));
+    }
+
+    if (!this.name) {
+      console.log('no sound name/sample provided');
+      return;
+    }
+
+    if (!this.buffer) {
+      this._toArrBuffer(this.base64);
+      audioContext.decodeAudioData(this.sound, function (buffer) {
+        this.buffer = buffer;
+        runSample.call(this);
+        next(true);
+      }.bind(this));
+    } else {
+      runSample.call(this);
+    }
   }
 };
